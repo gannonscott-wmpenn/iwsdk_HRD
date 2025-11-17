@@ -16,7 +16,9 @@ import {
   PanelUI,
   Interactable,
   ScreenSpace,
-  PhysicsBody, PhysicsShape, PhysicsShapeType, PhysicsState, PhysicsSystem
+  PhysicsBody, PhysicsShape, PhysicsShapeType, PhysicsState, PhysicsSystem,
+  CylinderGeometry,
+  OneHandGrabbable
 } from '@iwsdk/core';
 
 
@@ -53,6 +55,8 @@ World.create(document.getElementById('scene-container'), {
   const sphereEntity = world.createTransformEntity(sphere);
   sphereEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto,  density: 0.2,  friction: 0.5,  restitution: 0.9 });
   sphereEntity.addComponent(PhysicsBody, { state: PhysicsState.Dynamic });
+  sphereEntity.addComponent(Interactable);
+  sphereEntity.addComponent(OneHandGrabbable);
 
   // create a floor
   const floorMesh = new Mesh(new PlaneGeometry(20, 20), new MeshStandardMaterial({color:"tan"}));
@@ -62,14 +66,17 @@ World.create(document.getElementById('scene-container'), {
   floorEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto});
   floorEntity.addComponent(PhysicsBody, { state: PhysicsState.Static });
 
-  let numBounces = 0;
+  // create bat
+  const batGeom = new CylinderGeometry(0.066, 0.033, 1.3);
+  const batmtrl = new MeshStandardMaterial({ color: "brown" });
+  const bat = new Mesh(batGeom, batmtrl);
+  bat.position.set(1,1,1);
+  const batEntity = world.createTransformEntity(bat);
+  batEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto });
+  batEntity.addComponent(PhysicsBody, { state: PhysicsState.Kinematic });
+  batEntity.addComponent(OneHandGrabbable);
+
   function gameLoop() {
-      //console.log(sphereEntity.object3D.position.y);
-      if (sphereEntity.object3D.position.y < 0.27) {
-          numBounces += 1;
-          console.log(`Sphere has bounced ${numBounces} times`);
-          //sphereEntity.destroy()
-      }
       requestAnimationFrame(gameLoop);
     }
   gameLoop();
