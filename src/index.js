@@ -48,7 +48,7 @@ World.create(document.getElementById('scene-container'), {
   const { camera } = world;
   
   // Create a green sphere
-  const sphereGeometry = new SphereGeometry(0.25, 32, 32);
+  const sphereGeometry = new SphereGeometry(0.037, 32, 32);
   const greenMaterial = new MeshStandardMaterial({ color: "red" });
   const sphere = new Mesh(sphereGeometry, greenMaterial);
   sphere.position.set(1, 1.5, -3);
@@ -67,13 +67,14 @@ World.create(document.getElementById('scene-container'), {
   floorEntity.addComponent(PhysicsBody, { state: PhysicsState.Static });
 
   // create bat
-  const batGeom = new CylinderGeometry(0.066, 0.033, 1.3);
+  const batGeom = new CylinderGeometry(0.066, 0.033, 0.9);
   const batmtrl = new MeshStandardMaterial({ color: "brown" });
   const bat = new Mesh(batGeom, batmtrl);
   bat.position.set(1,1,1);
   const batEntity = world.createTransformEntity(bat);
   batEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto });
   batEntity.addComponent(PhysicsBody, { state: PhysicsState.Kinematic });
+  batEntity.addComponent(Interactable);
   batEntity.addComponent(OneHandGrabbable);
 
   function gameLoop() {
