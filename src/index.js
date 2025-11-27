@@ -49,11 +49,11 @@ World.create(document.getElementById('scene-container'), {
   
   // Create a green sphere
   const sphereGeometry = new SphereGeometry(0.037, 32, 32);
-  const greenMaterial = new MeshStandardMaterial({ color: "red" });
+  const greenMaterial = new MeshStandardMaterial({ color: 0xede5dd });
   const sphere = new Mesh(sphereGeometry, greenMaterial);
   sphere.position.set(1, 1.5, -3);
   const sphereEntity = world.createTransformEntity(sphere);
-  sphereEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto,  density: 0.2,  friction: 0.5,  restitution: 0.9 });
+  sphereEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto,  density: 0.15,  friction: 0.5,  restitution: .4 });
   sphereEntity.addComponent(PhysicsBody, { state: PhysicsState.Dynamic });
   sphereEntity.addComponent(Interactable);
   sphereEntity.addComponent(OneHandGrabbable);
@@ -68,14 +68,26 @@ World.create(document.getElementById('scene-container'), {
 
   // create bat
   const batGeom = new CylinderGeometry(0.066, 0.033, 0.9);
-  const batmtrl = new MeshStandardMaterial({ color: "brown" });
+  const batmtrl = new MeshStandardMaterial({ color: 0x946d40 });
   const bat = new Mesh(batGeom, batmtrl);
   bat.position.set(1,1,1);
   const batEntity = world.createTransformEntity(bat);
-  batEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto });
+  batEntity.addComponent(PhysicsShape, { shape: PhysicsShapeType.Auto, density: 0.9,  friction: 0.5, });
   batEntity.addComponent(PhysicsBody, { state: PhysicsState.Kinematic });
   batEntity.addComponent(Interactable);
   batEntity.addComponent(OneHandGrabbable);
+
+  const leftControllerEl = document.querySelector('#left-controller');
+  leftControllerEl.addEventListener('ybuttondown', function (event) {
+    // Y button pressed, do something here
+    console.log("Y button pressed!");
+    sphereEntity
+  });
+
+  // create wall/hitbox for win condition
+  const wallMesh = new Mesh(new PlaneGeometry(50, 50), new MeshStandardMaterial({color:"red"}));
+  wallMesh.position.set(20,25,20)
+  wallMesh.rotation.z = -Math.PI / 2;
 
   function gameLoop() {
       requestAnimationFrame(gameLoop);
